@@ -3,4 +3,4 @@
 ROS package for streaming Kodak sp_360 (not 4k)
 use Wifi to capture images
 
-metamon : fisheye image to panorama image
+`metamon.py` : fisheye image to panorama image
