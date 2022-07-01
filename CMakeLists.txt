@@ -180,8 +180,8 @@ include_directories(
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(PROGRAMS
-   nodes/kodak_sp360.py
-   nodes/metamon.py
+   src/kodak_sp360.py
+   src/metamon.py
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
