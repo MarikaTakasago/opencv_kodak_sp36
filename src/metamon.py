@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 from cv_bridge import CvBridge
 import math
-from PIL import Image
+from numba import jit
 
 
 class fish2pano():
@@ -49,6 +49,7 @@ class fish2pano():
 
     #make panorama image in 2 ways (tests)
     #first method (not use opencv function)
+    @jit
     def make_pano_by_scratch(self,cv_image):
         '''make a panorama image from a fisheye image'''
 
