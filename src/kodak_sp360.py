@@ -9,12 +9,13 @@ from sensor_msgs.msg import Image
 import cv2
 import numpy as np
 from cv_bridge import CvBridge
+from numba import jit
 
 
 class Kodak360Streamer:
     '''Grabs MJPEG stream from Kodak SP360 URL, parses images as cv images,
        converts cv images to ROS images and publishes them on a ROS topic.'''
-
+    @jit
     def __init__(self, hostname, port):
         self.hostname = hostname
         self.port = port
