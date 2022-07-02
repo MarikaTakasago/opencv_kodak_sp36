@@ -33,25 +33,20 @@ class Kodak360Streamer:
 
         bytes = self.camera_stream.read(1024)
         while not rospy.is_shutdown():
-            # print ("Grabbing image...")
-            # print (self.camera_stream.read(1024))
             bytes += self.camera_stream.read(1024)
 
-            # a = bytes.find(jpg_start)
-            # b = bytes.find(jpg_end)
             a = bytes.find(b'\xff\xd8')
             b = bytes.find(b'\xff\xd9')
-            # print (bytes)
 
             if a != -1 and b != -1:
-                print ("Image found.")
+                rospy.loginfo_once("Image found.")
                 jpg = bytes[a:b+2]
                 bytes = bytes[b+2:]
-                cv_img = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                cv_image = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
 
                 # Convert CV image to ROS image and publish to topic
-                ros_img = self.bridge.cv2_to_imgmsg(cv_img, "bgr8")
-                self.image_pub.publish(ros_img)
+                ros_image = self.bridge.cv2_to_imgmsg(cv_image, "bgr8")
+                self.image_pub.publish(ros_image)
 
 
 
