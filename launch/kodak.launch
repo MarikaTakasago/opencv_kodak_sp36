@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<launch>
+    <node pkg="opencv_kodak_sp360" type="kodak_sp360.py" name="kodak_streamer" output="screen" />
+    <node pkg="opencv_kodak_sp360" type="metamon.py" name="metamon_streamer" output="screen" />
+</launch>
