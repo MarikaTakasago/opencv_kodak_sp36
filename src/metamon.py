@@ -27,8 +27,8 @@ class fish2pano():
         # image parameters
         self.input_width = 1024
         self.input_height = 1024
-        self.output_width = 1024
-        self.output_height = 1024
+        # self.output_width = 1024
+        # self.output_height = 1024
 
     def callback(self, data):
         '''callback function for subscriber'''
@@ -82,37 +82,37 @@ class fish2pano():
 
         return pano_image
 
-    #second method (use opencv function)
-    def make_pano(self, cv_image):
-        '''make a panorama image from a fisheye image'''
-
-        # set a panorama image
-        pano_image = np.zeros((self.output_height, self.output_width, 3), dtype=np.uint8)
-        # pano_image = cv2.resize(cv_image, (self.output_width, self.output_height))
-
-        # convert CV image to numpy array
-        # cv_image = np.array(cv_image)
-        # pano_image = np.array(pano_image)
-
-        K = self.K()
-        D = self.D()
-        cv2.fisheye.undistortImage(cv_image, K, D, pano_image) # undistort the image
-
-        # convert numpy array to CV image
-        pano_image = cv2.cvtColor(pano_image, cv2.COLOR_BGR2RGB)
-
-        return pano_image
-
-    def K(self):
-        '''camera matrix'''
-        return np.array([[0.805, 0.0, 20.0],
-                         [0.0, 0.805, 20.0],
-                         [0.0, 0.0, 1.0]])
-    def D(self):
-        '''distortion coefficients'''
-        return np.array([-0.049, 0.152, 0.000, 0.000 ])
-
-
+    # #second method (use opencv function)
+    # def make_pano(self, cv_image):
+    #     '''make a panorama image from a fisheye image'''
+    #
+    #     # set a panorama image
+    #     pano_image = np.zeros((self.output_height, self.output_width, 3), dtype=np.uint8)
+    #     # pano_image = cv2.resize(cv_image, (self.output_width, self.output_height))
+    #
+    #     # convert CV image to numpy array
+    #     # cv_image = np.array(cv_image)
+    #     # pano_image = np.array(pano_image)
+    #
+    #     K = self.K()
+    #     D = self.D()
+    #     cv2.fisheye.undistortImage(cv_image, K, D, pano_image) # undistort the image
+    #
+    #     # convert numpy array to CV image
+    #     pano_image = cv2.cvtColor(pano_image, cv2.COLOR_BGR2RGB)
+    #
+    #     return pano_image
+    #
+    # def K(self):
+    #     '''camera matrix'''
+    #     return np.array([[0.805, 0.0, 20.0],
+    #                      [0.0, 0.805, 20.0],
+    #                      [0.0, 0.0, 1.0]])
+    # def D(self):
+    #     '''distortion coefficients'''
+    #     return np.array([-0.049, 0.152, 0.000, 0.000 ])
+    #
+    #
 # main
 def main():
     '''kodak to metamon'''
