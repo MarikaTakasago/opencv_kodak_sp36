@@ -7,7 +7,7 @@ use Wifi to capture images
 ## Befor running
 Import Numba for high speed forloop : `pip3 install numba`
 
-Wifi setting : Move`script`and run `./connetct_wifi.sh kodak`
+Wifi setting : go `script` and run `./connetct_wifi.sh kodak`
 
 ## Description
 `kodak_sp360.py` : get fisheye image from camera
