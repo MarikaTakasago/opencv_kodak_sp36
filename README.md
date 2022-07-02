@@ -13,3 +13,6 @@ Wifi setting : go `script` and run `./connetct_wifi.sh kodak`
 `kodak_sp360.py` : get fisheye image from camera
 
 `metamon.py` : fisheye image to panorama image
+
+## Warning
+`kodak.launch` does not work
