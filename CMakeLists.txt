@@ -182,6 +182,7 @@ include_directories(
 install(PROGRAMS
    src/kodak_sp360.py
    src/metamon.py
+   src/mimikkyu.py
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
