@@ -15,4 +15,4 @@ Wifi setting : go `script` and run `./connetct_wifi.sh kodak`
 `metamon.py` : fisheye image to panorama image
 
 ## Warning
-`kodak.launch` does not work. metamon will die
+use Numba0.55.2 or older
