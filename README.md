@@ -7,6 +7,8 @@ use Wifi to capture images
 ## Befor running
 Import Numba for high speed forloop : `pip3 install numba`
 
+(use Numba0.55.2 or older)
+
 Wifi setting : go `script` and run `./connetct_wifi.sh kodak`
 
 ## Description
@@ -14,5 +16,4 @@ Wifi setting : go `script` and run `./connetct_wifi.sh kodak`
 
 `metamon.py` : fisheye image to panorama image
 
-## Warning
-use Numba0.55.2 or older
+`mimikkyu.py` : panorama image to cube image
