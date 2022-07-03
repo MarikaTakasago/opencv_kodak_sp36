@@ -30,16 +30,23 @@ class fish2pano():
         # self.output_width = 1024
         # self.output_height = 1024
 
+
     def callback(self, data):
-        '''callback function for subscriber'''
-        rospy.loginfo_once("get image")
+        '''callback function for fisheye image'''
+        rospy.loginfo_once("metamon : received image")
+
         # convert ROS image to CV image
         cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         # print(cv_image.shape)
 
+        # set params
+        h = int(self.input_height / 2)
+        w = int(3 * h)
+        # set a panorama image
+        pano_image = np.zeros((h, w, 3), dtype=np.uint8)
+
         # make a panorama image
-        # pano_image = self.make_pano(cv_image)
-        pano_image = self.make_pano_by_scratch(cv_image)
+        pano_image = self.make_pano(cv_image, pano_image, h, w)
 
         # convert CV image to ROS image and publish to topic
         ros_image = self.bridge.cv2_to_imgmsg(pano_image, "rgb8")
@@ -47,22 +54,13 @@ class fish2pano():
         # cv2.imshow("pano", ros_image)
 
     @jit #for faster forloop
-    def make_pano_by_scratch(self,cv_image):
+    def make_pano(self,cv_image,pano_image,h,w):
         '''make a panorama image from a fisheye image'''
-
-        # set params
-        h = int(self.input_height / 2)
-        w = int(3 * h)
-
-        # set a panorama image
-        pano_image = np.zeros((h, w, 3), np.uint8)
-        # print(pano_image.shape)
 
         # convert CV image to numpy array
         cv_image = np.array(cv_image)
-        # print(cv_image.shape)
         pano_image = np.array(pano_image)
-
+        # print(cv_image.shape)
 
         # make a panorama image
         for i in range(0,w):
@@ -71,7 +69,6 @@ class fish2pano():
                 p = 2 * math.pi * i / w
                 ix = h - r * math.cos(p)
                 iy = h + r * math.sin(p)
-                # if(int(ix)-1 == 0 ) or (int(iy)-1 == 0) : print(ix, iy)
                 pano_image[j][i] = cv_image[int(iy-1)][int(ix-1)]
 
         # convert numpy array to CV image
@@ -87,7 +84,7 @@ def main():
 
     metamon = fish2pano()
 
-    print ("start")
+    print ("Let's go metamon!")
     rospy.spin()
 
 

@@ -5,29 +5,28 @@
 
 import rospy
 import urllib.request
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image as ImageMsg
 import cv2
 import numpy as np
 from cv_bridge import CvBridge
-from numba import jit
 
 
 class Kodak360Streamer:
     '''Grabs MJPEG stream from Kodak SP360 URL, parses images as cv images,
        converts cv images to ROS images and publishes them on a ROS topic.'''
-    @jit
+
     def __init__(self, hostname, port):
         self.hostname = hostname
         self.port = port
         self.cam_url = 'http://' + hostname + ':' + str(port)
 
-        self.image_pub = rospy.Publisher('/kodak/image', Image, queue_size=1)
+        self.image_pub = rospy.Publisher('/kodak/image', ImageMsg, queue_size=1)
         self.bridge = CvBridge()
 
         # Open MJPEG stream from camera at default URL
-        rospy.loginfo("Connecting to camera...")
+        rospy.loginfo("kodak : Connecting to camera...")
         self.camera_stream = urllib.request.urlopen(self.cam_url)
-        rospy.loginfo("Camera connected.")
+        rospy.loginfo("kodak : Camera connected.")
 
         jpg_start = '\xff\xd8'
         jpg_end = '\xff\xd9'
@@ -40,7 +39,7 @@ class Kodak360Streamer:
             b = bytes.find(b'\xff\xd9')
 
             if a != -1 and b != -1:
-                rospy.loginfo_once("Image found.")
+                rospy.loginfo_once("kodak : found image")
                 jpg = bytes[a:b+2]
                 bytes = bytes[b+2:]
                 cv_image = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
@@ -61,6 +60,7 @@ def main():
              'port': 9176}
 
     kodak_sp360 = Kodak360Streamer(**args)
+    print("Let's go kodak!")
 
     rospy.spin()
 
