@@ -45,8 +45,13 @@ class fish2pano():
         # set a panorama image
         pano_image = np.zeros((h, w, 3), dtype=np.uint8)
 
+        # convert CV image to numpy array
+        cv_image = np.array(cv_image)
+        pano_image = np.array(pano_image)
+
         # make a panorama image
         pano_image = self.make_pano(cv_image, pano_image, h, w)
+        pano_image = cv2.resize(pano_image, (1280,640))
 
         # convert CV image to ROS image and publish to topic
         ros_image = self.bridge.cv2_to_imgmsg(pano_image, "rgb8")
@@ -57,14 +62,9 @@ class fish2pano():
     def make_pano(self,cv_image,pano_image,h,w):
         '''make a panorama image from a fisheye image'''
 
-        # convert CV image to numpy array
-        cv_image = np.array(cv_image)
-        pano_image = np.array(pano_image)
-        # print(cv_image.shape)
-
         # make a panorama image
-        for i in range(0,w):
-            for j in range(0,h):
+        for i in range(w):
+            for j in range(h):
                 r = j
                 p = 2 * math.pi * i / w
                 ix = h - r * math.cos(p)
