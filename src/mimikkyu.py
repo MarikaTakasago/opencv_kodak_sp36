@@ -33,8 +33,8 @@ class pano2cube():
         cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         # cv_image = cv2.rotate(cv_image, cv2.ROTATE_180)
         # cv_image = cv2.resize(cv_image, (1280,640))
+        # print(type(cv_image))
         # print(cv_image.shape)
-
         # set params
         self.input_width = cv_image.shape[1]
         self.input_height = cv_image.shape[0]
@@ -45,8 +45,10 @@ class pano2cube():
         cube_image = np.zeros((output_height, output_width, 3), dtype=np.uint8)
 
         # convert CV image to numpy array
-        cv_image = np.array(cv_image)
-        cube_image = np.array(cube_image)
+        # cv_image = np.array(cv_image)
+        # cube_image = np.array(cube_image)
+        # print(type(cv_image))
+        # print(cv_image.shape)
 
         # make a cubemap
         cube_image = self.make_cube(cv_image, cube_image, self.input_width, self.input_height , output_width, output_height ,sqr)
@@ -61,6 +63,10 @@ class pano2cube():
         ''' make a cubemap from a panorama image'''
 
         # make a cubemap
+        # for debug
+        p = 0
+        pp = 0
+        print("---------------")
         for i in range(1, output_height+1):
             for j in range(1, output_width+1):
                 tx = 0.0
@@ -72,29 +78,29 @@ class pano2cube():
 
                 if i < sqr + 1: # top half of the cubemap
                     if j < sqr + 1: # top left = left
-                        # if j == 0: print("top left")
                         tx = j
                         ty = i
                         x = tx - 0.5 * sqr
                         y = 0.5 * sqr
                         z = (ty - 0.5 * sqr)
+                        p = 1
 
                     elif j < sqr * 2 + 1: # top middle = front
-                        # if j == sqr+1: print("top middle")
                         tx = j - sqr
                         ty = i
                         x = 0.5 * sqr
                         y = (tx - 0.5 * sqr) * -1
                         z = (ty - 0.5 * sqr)
                         pix = 1
+                        p = 2
 
                     else: # top right = right
-                        # if j == sqr * 2 + 1: print("top right")
                         tx = j - sqr * 2
                         ty = i
                         x = (tx - 0.5 * sqr) * -1
                         y = -0.5 * sqr
                         z = (ty - 0.5 * sqr)
+                        p = 3
 
                 else: # bottom half of the cubemap
                     if j < sqr + 1: # bottom left = back
@@ -103,6 +109,7 @@ class pano2cube():
                         x = int(-0.5 * sqr)
                         y = int(tx - 0.5 * sqr)
                         z = int(ty - 0.5 * sqr)
+                        p = 4
 
                     elif j < sqr * 2 + 1: # bottom middle = bottom
                         tx = j - sqr
@@ -110,6 +117,7 @@ class pano2cube():
                         x = (ty - 0.5 * sqr) * -1
                         y = (tx - 0.5 * sqr) * -1
                         z = 0.5 * sqr
+                        p = 5
 
                     else: # bottom right = top
                         tx = j - sqr * 2
@@ -117,6 +125,7 @@ class pano2cube():
                         x = ty - 0.5 * sqr
                         y = (tx - 0.5 * sqr) * -1
                         z = (-0.5 * sqr)
+                        p = 6
 
                 # find polor coordinate
                 r = math.sqrt(x**2 + y**2 + z**2)
@@ -137,8 +146,9 @@ class pano2cube():
                     x_pixel -= input_width
                 if y_pixel >= input_height:
                     y_pixel -= input_height
-                if pix ==1:
-                    print(x_pixel, y_pixel)
+                # if (i == sqr+1 and j == sqr*2+1) or (i == sqr*2 and j == sqr*3): #for debug : watch searched metamon's pixel
+                #     print(x_pixel, y_pixel)
+                pp = p;
 
                 # copy the pixel
                 cube_image[i-1][j-1] = cv_image[y_pixel][x_pixel]
@@ -147,8 +157,6 @@ class pano2cube():
         cube_image = cv2.cvtColor(cube_image, cv2.COLOR_BGR2RGB)
 
         return cube_image
-
-
 
 
 def main():
