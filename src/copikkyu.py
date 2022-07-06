@@ -76,104 +76,105 @@ class pano2cube():
         input_pixel = pil_image.load()
         output_pixel = cube_image.load()
 
-def projection(theta,phi):
-        if theta<0.615:
-            return projectTop(theta,phi)
-        Elif theta>2.527:
-            return projectBottom(theta,phi)
-        Elif phi <= pi/4 or phi > 7*pi/4:
-            return projectLeft(theta,phi)
-        Elif phi > pi/4 and phi <= 3*pi/4:
-            return projectFront(theta,phi)
-        Elif phi > 3*pi/4 and phi <= 5*pi/4:
-            return projectRight(theta,phi)
-        Elif phi > 5*pi/4 and phi <= 7*pi/4:
-            return projectBack(theta,phi)
-
-def projectLeft(theta,phi):
-        x = 1
-        y = tan(phi)
-        z = cot(theta) / cos(phi)
-        if z < -1:
-            return projectBottom(theta,phi)
-        if z > 1:
-            return projectTop(theta,phi)
-        return ("Left",x,y,z)
-
-def projectFront(theta,phi):
-        x = tan(phi-pi/2)
-        y = 1
-        z = cot(theta) / cos(phi-pi/2)
-        if z < -1:
-            return projectBottom(theta,phi)
-        if z > 1:
-            return projectTop(theta,phi)
-        return ("Front",x,y,z)
-
-def projectRight(theta,phi):
-        x = -1
-        y = tan(phi)
-        z = -cot(theta) / cos(phi)
-        if z < -1:
-            return projectBottom(theta,phi)
-        if z > 1:
-            return projectTop(theta,phi)
-        return ("Right",x,-y,z)
-
-def projectBack(theta,phi):
-        x = tan(phi-3*pi/2)
-        y = -1
-        z = cot(theta) / cos(phi-3*pi/2)
-        if z < -1:
-            return projectBottom(theta,phi)
-        if z > 1:
-            return projectTop(theta,phi)
-        return ("Back",-x,y,z)
-
-def projectTop(theta,phi):
-        # (a sin θ cos ø, a sin θ sin ø, a cos θ) = (x,y,1)
-        a = 1 / cos(theta)
-        x = tan(theta) * cos(phi)
-        y = tan(theta) * sin(phi)
-        z = 1
-        return ("Top",x,y,z)
-
-def projectBottom(theta,phi):
-        # (a sin θ cos ø, a sin θ sin ø, a cos θ) = (x,y,-1)
-        a = -1 / cos(theta)
-        x = -tan(theta) * cos(phi)
-        y = -tan(theta) * sin(phi)
-        z = -1
-        return ("Bottom",x,y,z)
-
-# Convert coords in cube to image coords
-# coords is a Tuple with the side and x,y,z coords
-# Edge is the length of an Edge of the cube in pixels
-def cubeToImg(coords,Edge):
-    if coords[0]=="Left":
-        (x,y) = (int(Edge*(coords[2]+1)/2), int(Edge*(3-coords[3])/2) )
-    Elif coords[0]=="Front":
-        (x,y) = (int(Edge*(coords[1]+3)/2), int(Edge*(3-coords[3])/2) )
-    Elif coords[0]=="Right":
-        (x,y) = (int(Edge*(5-coords[2])/2), int(Edge*(3-coords[3])/2) )
-    Elif coords[0]=="Back":
-        (x,y) = (int(Edge*(7-coords[1])/2), int(Edge*(3-coords[3])/2) )
-    Elif coords[0]=="Top":
-        (x,y) = (int(Edge*(3-coords[1])/2), int(Edge*(1+coords[2])/2) )
-    Elif coords[0]=="Bottom":
-        (x,y) = (int(Edge*(3-coords[1])/2), int(Edge*(5-coords[2])/2) )
-    return (x,y)
-
-
-
+        # Convert coords in cube to image coords
+        # coords is a Tuple with the side and x,y,z coords  
+        # Edge is the length of an Edge of the cube in pixels
         for i in xrange(output_height):
             for j in xrange(output_width):
                 pixel = input_pixel[i,j]
                 phi = i * 2 * pi / output_height
                 theta = j * pi / output_width
-                res = projection(theta,phi)
-
-                (x,y) = cubeToImg(res,Edge)
+                # res = projection(theta,phi)
+                if theta<0.615: # top   
+                    a = 1 / cos(theta)
+                    x = tan(theta) * cos(phi)
+                    y = tan(theta) * sin(phi)
+                    z = 1
+                    (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(1+y)/2) )
+        
+                elif theta>2.527: # bottom
+                    a = -1 / cos(theta)
+                    x = -tan(theta) * cos(phi)
+                    y = -tan(theta) * sin(phi)
+                    z = -1
+                    (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(5-y)/2) )
+        
+                elif phi <= pi/4 or phi > 7*pi/4: # left
+                    x = 1
+                    y = tan(phi)
+                    z = cot(theta) / cos(phi)
+                    if z < -1: # bottom
+                        a = -1 / cos(theta)
+                        x = -tan(theta) * cos(phi)
+                        y = -tan(theta) * sin(phi)
+                        z = -1
+                        (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(5-y)/2) )
+                    elif z > 1: # top
+                        a = 1 / cos(theta)
+                        x = tan(theta) * cos(phi)
+                        y = tan(theta) * sin(phi)
+                        z = 1
+                        (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(1+y)/2) )
+                    else:
+                        (out_x,out_y) = (int(sqr*(y+1)/2), int(sqr*(3-z)/2) )
+                    
+                elif phi > pi/4 and phi <= 3*pi/4: # front
+                    x = tan(phi-pi/2)
+                    y = 1
+                    z = cot(theta) / cos(phi-pi/2)
+                    if z < -1: # bottom
+                        a = -1 / cos(theta)
+                        x = -tan(theta) * cos(phi)
+                        y = -tan(theta) * sin(phi)
+                        z = -1
+                        (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(5-y)/2) )
+                    elif z > 1: # top
+                        a = 1 / cos(theta)
+                        x = tan(theta) * cos(phi)
+                        y = tan(theta) * sin(phi)
+                        z = 1
+                        (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(1+y)/2) )
+                    else:
+                        (out_x,out_y) = (int(sqr*(x+3)/2), int(sqr*(3-z)/2) )
+        
+                elif phi > 3*pi/4 and phi <= 5*pi/4: # right
+                    x = -1
+                    y = tan(phi)
+                    z = -cot(theta) / cos(phi)
+                    if z < -1: # bottom
+                        a = -1 / cos(theta)
+                        x = -tan(theta) * cos(phi)
+                        y = -tan(theta) * sin(phi)
+                        z = -1
+                        (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(5-y)/2) )
+                    elif z > 1: # top
+                        a = 1 / cos(theta)
+                        x = tan(theta) * cos(phi)
+                        y = tan(theta) * sin(phi)
+                        z = 1
+                        (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(1+y)/2) )
+                    else:
+                        (out_x,out_y) = (int(sqr*(5-y)/2), int(sqr*(3-z)/2) )
+        
+                elif phi > 5*pi/4 and phi <= 7*pi/4: # back
+                    x = tan(phi-3*pi/2)
+                    y = -1
+                    z = cot(theta) / cos(phi-3*pi/2)
+                    if z < -1: # bottom
+                        a = -1 / cos(theta)
+                        x = -tan(theta) * cos(phi)
+                        y = -tan(theta) * sin(phi)
+                        z = -1
+                        (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(5-y)/2) )
+                    elif z > 1: # top
+                        a = 1 / cos(theta)
+                        x = tan(theta) * cos(phi)
+                        y = tan(theta) * sin(phi)
+                        z = 1
+                        (out_x,out_y) = (int(sqr*(3-x)/2), int(sqr*(1+y)/2) )
+                    else:
+                        (out_x,out_y) = (int(sqr*(7-x)/2), int(sqr*(3-z)/2) )
+                               
                 #if i % 100 == 0 and j % 100 == 0:
                 #   print i,j,phi,theta,res,x,y
                 if x >= output_height:
@@ -183,6 +184,7 @@ def cubeToImg(coords,Edge):
                     #print "y out of range ",y,res
                     y = output_width - 1
                 output_pixel[x,y] = pixel
+                
         # for i in range(output_height):
         #     face = int (i / sqr) # 0:back , 1:left, 2:front ,3:right
         #     if face == 2:
