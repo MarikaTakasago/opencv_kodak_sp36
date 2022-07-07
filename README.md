@@ -4,10 +4,14 @@ ROS package for streaming Kodak sp_360 (not 4k)
 
 use Wifi to capture images
 
-## Befor running
-Import Numba for high speed forloop : `pip3 install numba`
+## Dependency
 
-(use Numba0.55.2 or older)
+Numba : `pip3 install numba` for high speed forloop (use Numba0.55.2 or older)
+
+[omnicv](https://github.com/kaustubh-sadekar/OmniCV-Lib) : convert to cubemap
+
+
+## Befor running
 
 Wifi setting : go `script` and run `./connetct_wifi.sh kodak`
 
