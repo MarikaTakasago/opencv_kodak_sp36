@@ -18,8 +18,8 @@ class fish2pano():
     def __init__(self):
 
         # subscriver and publisher
-        self.image_sub = rospy.Subscriber('/kodak/image', ImageMsg, self.callback)
-        self.image_pub = rospy.Publisher('/metamon/image', ImageMsg, queue_size=1)
+        self.image_sub = rospy.Subscriber('/kodak/raw', ImageMsg, self.callback)
+        self.image_pub = rospy.Publisher('/kodak/metamon', ImageMsg, queue_size=1)
         self.bridge = CvBridge()
         self.data = ImageMsg()
 

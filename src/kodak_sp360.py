@@ -20,7 +20,7 @@ class Kodak360Streamer:
         self.port = port
         self.cam_url = 'http://' + hostname + ':' + str(port)
 
-        self.image_pub = rospy.Publisher('/kodak/image', ImageMsg, queue_size=1)
+        self.image_pub = rospy.Publisher('/kodak/raw', ImageMsg, queue_size=1)
         self.bridge = CvBridge()
 
         # Open MJPEG stream from camera at default URL
