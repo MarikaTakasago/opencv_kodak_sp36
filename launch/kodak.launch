@@ -4,4 +4,5 @@
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find opencv_kodak_sp360)/config/cameras.rviz" output="screen" />
     <node pkg="opencv_kodak_sp360" type="kodak_sp360.py" name="kodak_streamer" output="screen" />
     <node pkg="opencv_kodak_sp360" type="metamon.py" name="metamon_streamer" output="screen" />
+    <node pkg="opencv_kodak_sp360" type="mimikkyu.py" name="mimikkyu_streamer" output="screen" />
 </launch>
